@@ -8,9 +8,11 @@ import { useCallback } from "react";
 import type { Game } from "~/lib/game/game";
 import GameCard from "~/components/GameCard";
 
-import { games } from "~/lib/game/game";
+import { useGames } from "~/lib/game/game";
 
 export default function App() {
+  const { games, isLoading, resetGames } = useGames();
+
   const onBuyGamePress = useCallback(async () => {
     WebBrowser.openBrowserAsync(
       "https://www.philibertnet.com/en/gigamic/11512-papayoo-3421276805415.html",
@@ -30,11 +32,16 @@ export default function App() {
       <Button className="mt-8" onPress={onNewGame}>
         <Text className="px-8">New Game</Text>
       </Button>
-      <FlatList
-        className="w-full"
-        data={games}
-        renderItem={renderGames}
-      ></FlatList>
+      {!isLoading && (
+        <FlatList
+          className="w-full"
+          data={games}
+          renderItem={renderGames}
+        ></FlatList>
+      )}
+      <Button className="mb-4" onPress={resetGames}>
+        <Text>Reset state</Text>
+      </Button>
       <Button className="mb-4" variant={"link"} onPress={onBuyGamePress}>
         <Text>Buy a Papayoo card game</Text>
       </Button>
