@@ -1,14 +1,14 @@
-import { Text } from "~/components/ui/text";
-import { H1 } from "~/components/ui/typography";
-import { Button } from "~/components/ui/button";
+import { useCallback } from "react";
 import { FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as WebBrowser from "expo-web-browser";
-import { useCallback } from "react";
-import type { Game } from "~/lib/game/game";
+import { Text } from "~/components/ui/text";
+import { H1 } from "~/components/ui/typography";
+import { Button } from "~/components/ui/button";
 import GameCard from "~/components/GameCard";
 
 import { useGames } from "~/lib/game/game";
+import type { Game } from "~/lib/game/game";
 
 export default function App() {
   const { games, isLoading, resetGames } = useGames();

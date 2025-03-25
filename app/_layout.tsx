@@ -1,5 +1,6 @@
 import "~/global.css";
 
+import * as React from "react";
 import {
   Theme,
   ThemeProvider,
@@ -8,7 +9,7 @@ import {
 } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import * as React from "react";
+
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 
