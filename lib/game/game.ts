@@ -1,6 +1,7 @@
 import { randomUUID } from "expo-crypto";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery, QueryClient, useMutation } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
 
 export type Player = {
   name: string;
@@ -42,28 +43,35 @@ const createGame = async (game: { name: string; players: string[] }) => {
   const data = await AsyncStorage.getItem("games");
   if (!data) {
     await AsyncStorage.setItem("games", JSON.stringify([newGame] as Game[]));
-    return;
+    return newGame;
   }
 
   const games = JSON.parse(data, reviver) as Game[];
   games.push(newGame);
   await AsyncStorage.setItem("games", JSON.stringify(games));
+
+  return newGame;
 };
 
 export const queryClient = new QueryClient();
 
 export function useGames() {
+  const router = useRouter();
+
   const { isPending, error, data } = useQuery({
     queryKey: ["games"],
     queryFn: () => fetchGames(),
   });
 
-  const { mutate: create } = useMutation({
-    mutationFn: createGame,
-    onSuccess: () => {
+  const { mutate: create, data: created } = useMutation({
+    mutationFn: (game: { name: string; players: string[] }) => {
+      return createGame(game);
+    },
+    onSuccess: (game) => {
       queryClient.invalidateQueries({ queryKey: ["games"] });
+      router.replace(`/game/${game.id}`);
     },
   });
 
-  return { isPending, error, games: data, create };
+  return { isPending, error, games: data, create, created };
 }
