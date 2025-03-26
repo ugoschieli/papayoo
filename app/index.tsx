@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as WebBrowser from "expo-web-browser";
+import { useRouter } from "expo-router";
 import { Text } from "~/components/ui/text";
 import { H1 } from "~/components/ui/typography";
 import { Button } from "~/components/ui/button";
@@ -11,7 +12,8 @@ import { useGames } from "~/lib/game/game";
 import type { Game } from "~/lib/game/game";
 
 export default function App() {
-  const { games, isLoading, resetGames } = useGames();
+  const { games, isPending } = useGames();
+  const router = useRouter();
 
   const onBuyGamePress = useCallback(async () => {
     WebBrowser.openBrowserAsync(
@@ -19,7 +21,9 @@ export default function App() {
     );
   }, []);
 
-  const onNewGame = useCallback(() => {}, []);
+  const onNewGame = useCallback(() => {
+    router.push("/new-game");
+  }, [router]);
 
   const renderGames = ({ item }: { item: Game }) => (
     <GameCard game={item}></GameCard>
@@ -32,16 +36,13 @@ export default function App() {
       <Button className="mt-8" onPress={onNewGame}>
         <Text className="px-8">New Game</Text>
       </Button>
-      {!isLoading && (
+      {!isPending && (
         <FlatList
           className="w-full"
           data={games}
           renderItem={renderGames}
         ></FlatList>
       )}
-      <Button className="mb-4" onPress={resetGames}>
-        <Text>Reset state</Text>
-      </Button>
       <Button className="mb-4" variant={"link"} onPress={onBuyGamePress}>
         <Text>Buy a Papayoo card game</Text>
       </Button>

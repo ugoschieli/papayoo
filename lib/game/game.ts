@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
 import { randomUUID } from "expo-crypto";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useQuery, QueryClient, useMutation } from "@tanstack/react-query";
 
 export type Player = {
   name: string;
@@ -15,111 +15,55 @@ export type Game = {
   lastPlayedDate: Date;
 };
 
-const gamesBase: Game[] = [
-  {
+const reviver = (key: string, value: any) => {
+  if (key === "creationDate" || key === "lastPlayedDate") {
+    return new Date(value);
+  }
+  return value;
+};
+
+const fetchGames = () =>
+  AsyncStorage.getItem("games").then((data) => {
+    if (!data) return null;
+    return JSON.parse(data, reviver) as Game[];
+  });
+
+const createGame = async (game: { name: string; players: string[] }) => {
+  const newGame: Game = {
     id: randomUUID(),
-    name: "La chicha",
-    players: [
-      {
-        name: "Ugo",
-        score: 512,
-      },
-      {
-        name: "Etienne",
-        score: 1002,
-      },
-      {
-        name: "Coco",
-        score: 0,
-      },
-      {
-        name: "Loic",
-        score: 187,
-      },
-    ],
+    name: game.name,
+    players: game.players.map((name) => {
+      return { name, score: 0 };
+    }),
     creationDate: new Date(),
     lastPlayedDate: new Date(),
-  },
-  {
-    id: randomUUID(),
-    name: "La chicha",
-    players: [
-      {
-        name: "Ugo",
-        score: 512,
-      },
-      {
-        name: "Etienne",
-        score: 1002,
-      },
-      {
-        name: "Coco",
-        score: 0,
-      },
-      {
-        name: "Loic",
-        score: 187,
-      },
-    ],
-    creationDate: new Date(),
-    lastPlayedDate: new Date(),
-  },
-  {
-    id: randomUUID(),
-    name: "La chicha",
-    players: [
-      {
-        name: "Ugo",
-        score: 512,
-      },
-      {
-        name: "Etienne",
-        score: 1002,
-      },
-      {
-        name: "Coco",
-        score: 0,
-      },
-      {
-        name: "Loic",
-        score: 187,
-      },
-    ],
-    creationDate: new Date(),
-    lastPlayedDate: new Date(),
-  },
-];
+  };
+
+  const data = await AsyncStorage.getItem("games");
+  if (!data) {
+    await AsyncStorage.setItem("games", JSON.stringify([newGame] as Game[]));
+    return;
+  }
+
+  const games = JSON.parse(data, reviver) as Game[];
+  games.push(newGame);
+  await AsyncStorage.setItem("games", JSON.stringify(games));
+};
+
+export const queryClient = new QueryClient();
 
 export function useGames() {
-  const [games, setGames] = useState<Game[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [refetch, setRefetch] = useState(true);
+  const { isPending, error, data } = useQuery({
+    queryKey: ["games"],
+    queryFn: () => fetchGames(),
+  });
 
-  useEffect(() => {
-    AsyncStorage.getItem("games").then((data) => {
-      if (!data) {
-        setIsLoading(false);
-        return;
-      }
+  const { mutate: create } = useMutation({
+    mutationFn: createGame,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["games"] });
+    },
+  });
 
-      const reviver = (key: string, value: any) => {
-        if (key === "creationDate" || key === "lastPlayedDate") {
-          return new Date(value);
-        }
-        return value;
-      };
-
-      const games: Game[] = JSON.parse(data, reviver);
-      setGames(games);
-      setIsLoading(false);
-    });
-  }, [refetch]);
-
-  const resetGames = useCallback(async () => {
-    await AsyncStorage.removeItem("games");
-    await AsyncStorage.setItem("games", JSON.stringify(gamesBase));
-    setRefetch(!refetch);
-  }, []);
-
-  return { games, isLoading, resetGames };
+  return { isPending, error, games: data, create };
 }
