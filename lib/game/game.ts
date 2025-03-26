@@ -53,6 +53,16 @@ const createGame = async (game: { name: string; players: string[] }) => {
   return newGame;
 };
 
+const deleteGameById = async (params: { id: string }) => {
+  const data = await AsyncStorage.getItem("games");
+  if (!data) return;
+
+  const games = JSON.parse(data, reviver) as Game[];
+  const filtered = games.filter((game) => game.id !== params.id);
+
+  await AsyncStorage.setItem("games", JSON.stringify(filtered));
+};
+
 export const queryClient = new QueryClient();
 
 export function useGames() {
@@ -73,5 +83,14 @@ export function useGames() {
     },
   });
 
-  return { isPending, error, games: data, create, created };
+  const { mutate: deleteById } = useMutation({
+    mutationFn: (params: { id: string }) => {
+      return deleteGameById(params);
+    },
+    onSuccess: (game) => {
+      queryClient.invalidateQueries({ queryKey: ["games"] });
+    },
+  });
+
+  return { isPending, error, games: data, create, created, deleteById };
 }
