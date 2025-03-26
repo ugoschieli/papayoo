@@ -8,15 +8,10 @@ import {
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import type { Game } from "~/lib/game/game";
-import { useCallback } from "react";
 import { useRouter } from "expo-router";
 
 export default function GameCard({ game }: { game: Game }) {
   const router = useRouter();
-
-  const onContinuePress = useCallback((id: string) => {
-    router.push(`/game/${id}`);
-  }, []);
 
   return (
     <Card className="mt-4 mx-16" key={game.id}>
@@ -33,7 +28,7 @@ export default function GameCard({ game }: { game: Game }) {
             className="mt-2"
             variant={"secondary"}
             onPress={() => {
-              onContinuePress(game.id);
+              router.push(`/game/${game.id}`);
             }}
           >
             <Text>Continue Game</Text>
