@@ -96,7 +96,7 @@ export default function GameCard({ game }: { game: Game }) {
               >{`${player.name}: ${player.score} points`}</Text>
             ))}
             <Button
-              className="mt-2"
+              className="mt-2 bg-destructive"
               variant={"secondary"}
               onPress={() => {
                 router.push(`/game/${game.id}`);
