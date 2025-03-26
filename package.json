@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
     "@types/react": "~18.3.12",
     "eslint": "^8.57.0",
     "eslint-config-expo": "~8.0.1",

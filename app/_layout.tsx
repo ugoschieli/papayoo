@@ -1,20 +1,18 @@
 import "~/global.css";
-
-import { PortalHost } from "@rn-primitives/portal";
-import * as React from "react";
 import {
+  DarkTheme,
+  DefaultTheme,
   Theme,
   ThemeProvider,
-  DefaultTheme,
-  DarkTheme,
 } from "@react-navigation/native";
+import { PortalHost } from "@rn-primitives/portal";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { NAV_THEME } from "~/lib/constants";
+import { queryClient } from "~/lib/game/game";
+import { useColorScheme } from "~/lib/useColorScheme";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { QueryClientProvider } from "@tanstack/react-query";
-
-import { NAV_THEME } from "~/lib/constants";
-import { useColorScheme } from "~/lib/useColorScheme";
-import { queryClient } from "~/lib/game/game";
+import * as React from "react";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,

@@ -1,6 +1,6 @@
-import { randomUUID } from "expo-crypto";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useQuery, QueryClient, useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { randomUUID } from "expo-crypto";
 import { useRouter } from "expo-router";
 
 export type Player = {
@@ -21,6 +21,15 @@ const reviver = (key: string, value: any) => {
     return new Date(value);
   }
   return value;
+};
+
+const fetchGameById = async (id: string) => {
+  const data = await AsyncStorage.getItem("games");
+  if (!data) throw new Error("Didn't find any games in AsyncStorage");
+
+  const games = JSON.parse(data, reviver) as Game[];
+  const selected = games.filter((game) => game.id === id)[0];
+  return selected;
 };
 
 const fetchGames = () =>
@@ -64,6 +73,15 @@ const deleteGameById = async (params: { id: string }) => {
 };
 
 export const queryClient = new QueryClient();
+
+export function useGame(id: string) {
+  const { isPending, error, data } = useQuery({
+    queryKey: ["games", id],
+    queryFn: () => fetchGameById(id),
+  });
+
+  return { isPending, error, data };
+}
 
 export function useGames() {
   const router = useRouter();

@@ -1,15 +1,14 @@
+import GameCard from "~/components/GameCard";
+import { Button } from "~/components/ui/button";
+import { Text } from "~/components/ui/text";
+import { H1 } from "~/components/ui/typography";
+import { useGames } from "~/lib/game/game";
+import type { Game } from "~/lib/game/game";
+import { useRouter } from "expo-router";
+import * as WebBrowser from "expo-web-browser";
 import { useCallback } from "react";
 import { FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as WebBrowser from "expo-web-browser";
-import { useRouter } from "expo-router";
-import { Text } from "~/components/ui/text";
-import { H1 } from "~/components/ui/typography";
-import { Button } from "~/components/ui/button";
-import GameCard from "~/components/GameCard";
-
-import { useGames } from "~/lib/game/game";
-import type { Game } from "~/lib/game/game";
 
 export default function App() {
   const { games, isPending } = useGames();

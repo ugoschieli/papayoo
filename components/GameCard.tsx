@@ -1,11 +1,11 @@
+import { Button } from "~/components/ui/button";
 import {
   Card,
+  CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
 } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -18,8 +18,8 @@ import {
 import { Text } from "~/components/ui/text";
 import { useGames, type Game } from "~/lib/game/game";
 import { useRouter } from "expo-router";
-import { TouchableOpacity } from "react-native";
 import { useState } from "react";
+import { TouchableOpacity } from "react-native";
 
 function DeleteDialog({
   id,

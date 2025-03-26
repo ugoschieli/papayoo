@@ -1,6 +1,6 @@
-import { Plus, Minus } from "~/lib/icons/icons";
-import { TouchableOpacity, View } from "react-native";
 import { Text } from "~/components/ui/text";
+import { Minus, Plus } from "~/lib/icons/icons";
+import { TouchableOpacity, View } from "react-native";
 
 function NumberInputButton({
   variant,
