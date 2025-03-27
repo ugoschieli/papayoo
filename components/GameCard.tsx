@@ -61,7 +61,7 @@ function DeleteDialog({
               setOpen(false);
             }}
           >
-            <Button className="bg-destructive">
+            <Button variant={"destructive"}>
               <Text>Delete</Text>
             </Button>
           </DialogClose>
@@ -82,6 +82,9 @@ export default function GameCard({ game }: { game: Game }) {
   return (
     <Card className="mt-4 mx-16" key={game.id}>
       <TouchableOpacity
+        onPress={() => {
+          router.push(`/game/${game.id}`);
+        }}
         onLongPress={() => {
           openDeleteDialog();
         }}
@@ -96,8 +99,8 @@ export default function GameCard({ game }: { game: Game }) {
               >{`${player.name}: ${player.score} points`}</Text>
             ))}
             <Button
-              className="mt-2 bg-destructive"
-              variant={"secondary"}
+              className="mt-2"
+              variant={"destructive"}
               onPress={() => {
                 router.push(`/game/${game.id}`);
               }}
