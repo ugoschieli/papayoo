@@ -24,6 +24,16 @@
       },
       "package": "com.ugoat.papayoo"
     },
-    "plugins": ["expo-router"]
+    "plugins": [
+      "expo-router"
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "125c13f5-2d2f-4d69-b86a-8c79d9f622a8"
+      }
+    }
   }
 }

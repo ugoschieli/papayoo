@@ -3,6 +3,9 @@
 # dependencies
 node_modules/
 
+# build artifacts
+*.apk
+
 # Expo
 .expo/
 dist/

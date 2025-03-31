@@ -80,17 +80,15 @@ export default function NewRoundPage() {
           <View className="mx-4 mt-4 flex-1">
             <H2 className="border-0">Scores</H2>
             <ScrollView>
-              {game.players
-                .sort((a, b) => a.score - b.score)
-                .map((player) => (
-                  <PlayerCard
-                    key={player.id}
-                    player={player}
-                    points={points}
-                    setPoints={setPoints}
-                    getCurrentPoints={getRoundPoints}
-                  />
-                ))}
+              {game.players.map((player) => (
+                <PlayerCard
+                  key={player.id}
+                  player={player}
+                  points={points}
+                  setPoints={setPoints}
+                  getCurrentPoints={getRoundPoints}
+                />
+              ))}
             </ScrollView>
           </View>
         </>
