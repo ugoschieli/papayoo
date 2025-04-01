@@ -95,9 +95,9 @@ const fetchGames = () =>
 const createGame = async (game: { name: string; players: string[] }) => {
   const newGame: Game = {
     id: randomUUID(),
-    name: game.name,
+    name: game.name.trim(),
     players: game.players.map((name) => {
-      return { id: randomUUID(), name, score: 0 };
+      return { id: randomUUID(), name: name.trim(), score: 0 };
     }),
     rounds: [],
     creationDate: new Date(),
@@ -250,15 +250,6 @@ export function useGames() {
       queryClient.invalidateQueries({ queryKey: ["games"] });
     },
   });
-
-  // const { mutate: addRound } = useMutation({
-  //   mutationFn: (params: any) => {
-  //     return addRound
-  //   },
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: ["games"] });
-  //   },
-  // });
 
   return {
     isPending,

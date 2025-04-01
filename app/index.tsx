@@ -7,11 +7,11 @@ import type { Game } from "~/lib/game/game";
 import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { useCallback } from "react";
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function App() {
-  const { games, isPending } = useGames();
+  const { games } = useGames();
   const router = useRouter();
 
   const onBuyGamePress = useCallback(async () => {
@@ -35,7 +35,11 @@ export default function App() {
       <Button className="mt-8" onPress={onNewGame}>
         <Text className="px-8">New Game</Text>
       </Button>
-      {!isPending && (
+      {!games || games.length === 0 ? (
+        <View className="flex-1 flex justify-center">
+          <Text>No games yet</Text>
+        </View>
+      ) : (
         <FlatList
           className="w-full"
           data={games}

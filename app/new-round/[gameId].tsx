@@ -12,6 +12,7 @@ import { Text } from "~/components/ui/text";
 import { H1, H2 } from "~/components/ui/typography";
 import { basePointsState, Player, PointsState, useGame } from "~/lib/game/game";
 import { useLocalSearchParams } from "expo-router";
+import { ChevronDown } from "lucide-react-native";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -38,11 +39,13 @@ function PlayerCard({
         </CardHeader>
         <CardContent className="pb-0">
           <Button
+            className="rounded-xl"
+            variant={"outline"}
             onPress={() => {
               setOpen(!open);
             }}
           >
-            <Text>Toggle</Text>
+            <ChevronDown className="text-foreground" />
           </Button>
           <Badge variant={"destructive"} className="mt-2">
             <Text>{getCurrentPoints(points, player.id)}</Text>
