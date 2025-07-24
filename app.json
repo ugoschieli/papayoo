@@ -25,7 +25,16 @@
       "package": "com.ugoat.papayoo"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Typefesse-Pleine.otf",
+            "./assets/fonts/Typefesse-Claire-Obscure.otf"
+          ]
+        }
+      ]
     ],
     "extra": {
       "router": {

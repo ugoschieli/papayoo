@@ -6,6 +6,9 @@ module.exports = {
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
+      fontFamily: {
+        typefesse: ["Typefesse-Pleine"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
