@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 24.x
           cache: npm
       - name: Setup Expo and EAS
         uses: expo/expo-github-action@v8
@@ -21,25 +21,13 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
       - name: Install dependencies
         run: npm ci
-      - name: Build on EAS
-        run: eas build --platform android --profile preview --non-interactive --wait
-      - name: Get build info
-        id: build-info
-        run: |
-          # Get the latest build ID for this project
-          BUILD_ID=$(eas build:list --platform android --limit 1 --json | jq -r '.[0].id')
-          BUILD_URL=$(eas build:list --platform android --limit 1 --json | jq -r '.[0].artifacts.buildUrl')
-          echo "build-id=$BUILD_ID" >> $GITHUB_OUTPUT
-          echo "build-url=$BUILD_URL" >> $GITHUB_OUTPUT
-      - name: Download APK
-        run: |
-          # Download the APK from EAS
-          curl -L -o papayoo.apk "${{ steps.build-info.outputs.build-url }}"
       - name: Get app version
         id: app-version
         run: |
           VERSION=$(jq -r '.expo.version' app.json)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+      - name: Build on EAS
+        run: eas build --platform android --profile preview --non-interactive --wait --local --output "papayoo-${{ steps.app-version.outputs.version }}.apk"
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
@@ -48,7 +36,6 @@ jobs:
           body: |
             ## 🚀 Release Notes
 
-            **Build ID:** ${{ steps.build-info.outputs.build-id }}
             **Version:** ${{ steps.app-version.outputs.version }}
             **Commit:** ${{ github.sha }}
 
@@ -59,6 +46,6 @@ jobs:
             Download the APK below and install it on your Android device.
 
           files: |
-            papayoo.apk
+            papayoo-${{ steps.app-version.outputs.version }}.apk
           draft: false
           prerelease: false
