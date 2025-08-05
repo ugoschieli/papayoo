@@ -2,6 +2,8 @@ import {
   ChevronDown,
   Club,
   Diamond,
+  FileDown,
+  FileUp,
   Heart,
   Minus,
   Plus,
@@ -16,5 +18,17 @@ iconWithClassName(Heart);
 iconWithClassName(Diamond);
 iconWithClassName(Club);
 iconWithClassName(Spade);
+iconWithClassName(FileDown);
+iconWithClassName(FileUp);
 
-export { Plus, Minus, ChevronDown, Heart, Diamond, Club, Spade };
+export {
+  Plus,
+  Minus,
+  ChevronDown,
+  Heart,
+  Diamond,
+  Club,
+  Spade,
+  FileDown,
+  FileUp,
+};

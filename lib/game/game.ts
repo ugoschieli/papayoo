@@ -1,6 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { randomUUID } from "expo-crypto";
+import { getDocumentAsync } from "expo-document-picker";
+import * as FS from "expo-file-system";
+import { StorageAccessFramework as SAF } from "expo-file-system";
 import { useRouter } from "expo-router";
 import { useCallback } from "react";
 
@@ -91,6 +94,38 @@ const fetchGames = () =>
     if (!data) return null;
     return JSON.parse(data, reviver) as Game[];
   });
+
+const exportGames = async () => {
+  try {
+    const games = await fetchGames();
+    const json = JSON.stringify(games);
+    const permissions = await SAF.requestDirectoryPermissionsAsync();
+    if (!permissions.granted) {
+      throw new Error("Permission not granted");
+    }
+    const file = await SAF.createFileAsync(
+      permissions.directoryUri,
+      "papayoo",
+      "application/json",
+    );
+    await SAF.writeAsStringAsync(file, json);
+  } catch (e) {
+    console.error("Error:", e);
+    throw e;
+  }
+};
+
+const importGames = async () => {
+  try {
+    const pickerResult = await getDocumentAsync();
+    if (!pickerResult.assets) return;
+    const json = await FS.readAsStringAsync(pickerResult.assets[0].uri);
+    await AsyncStorage.setItem("games", json);
+  } catch (e) {
+    console.error("Error:", e);
+    throw e;
+  }
+};
 
 const createGame = async (game: { name: string; players: string[] }) => {
   const newGame: Game = {
@@ -251,6 +286,17 @@ export function useGames() {
     },
   });
 
+  const { mutate: jsonExport } = useMutation({
+    mutationFn: exportGames,
+  });
+
+  const { mutate: jsonImport } = useMutation({
+    mutationFn: importGames,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["games"] });
+    },
+  });
+
   return {
     isPending,
     error,
@@ -258,6 +304,8 @@ export function useGames() {
     create,
     created,
     deleteById,
+    jsonExport,
+    jsonImport,
     // addRound,
   };
 }
