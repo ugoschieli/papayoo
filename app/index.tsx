@@ -38,7 +38,7 @@ export default function App() {
 
   return (
     <SafeAreaView className="flex-1 items-center">
-      <H1 className="mt-4">Papayoo Points Counter</H1>
+      <H1 className="mt-4 text-center">Papayoo Points Counter</H1>
       <Text className="mt-2">Welcome to the Papayoo world ! ♥️♠️♦️♣️7️⃣</Text>
       <View className="flex-row gap-4">
         <Button variant={"destructive"} className="mt-8" onPress={onNewGame}>
