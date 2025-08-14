@@ -31,8 +31,8 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ steps.app-version.outputs.version }}-${{ github.run_number }}
-          name: Release v${{ steps.app-version.outputs.version }}-${{ github.run_number }}
+          tag_name: v${{ steps.app-version.outputs.version }}
+          name: Release v${{ steps.app-version.outputs.version }}
           body: |
             ## 🚀 Release Notes
 
